@@ -8,12 +8,14 @@ const db = knex({
 });
 
 async function setup() {
-    await db.schema.createTableIfNotExists("products", table => {
-        table.integer("id").primary();
-        table.string("name");
-        table.string("price");
-        table.float("weight");
-    })
+    if (!await db.schema.hasTable("products")) {
+        await db.schema.createTable("products", table => {
+            table.integer("id").primary();
+            table.string("name");
+            table.string("price");
+            table.float("weight").index();
+        });
+    }
 }
 
 setup();

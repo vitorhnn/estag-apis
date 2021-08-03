@@ -3,8 +3,19 @@ import db from "./db.mjs";
 
 const router = Router();
 
+// weight=<,5
 router.get("/products", async (req, res) => {
-    const products = await db.select(["id", "name", "price", "weight"]).from("products");
+    const { weight } = req.query;
+
+    let query = db.select(["id", "name", "price", "weight"]).from("products");
+
+    if (weight) {
+        const [operator, value] = weight.split(",");
+
+        query = query.where("weight", operator, value);
+    }
+
+    const products = await query;
 
     res.json(products);
 });
