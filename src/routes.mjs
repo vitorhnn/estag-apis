@@ -3,9 +3,20 @@ import db from "./db.mjs";
 
 const router = Router();
 
-router.get("/products", (req, res) => {
-    res.send("Hi!");
+router.get("/products", async (req, res) => {
+    const products = await db.select(["id", "name", "price", "weight"]).from("products");
+
+    res.json(products);
 });
+
+router.get("/products/:id", async (req, res) => {
+    const { id } = req.params;
+
+    const [product] = await db.select(["id", "name", "price", "weight"]).from("products").where({ id })
+
+    res.send(product);
+});
+
 
 // entrada dessa rota:
 /*
