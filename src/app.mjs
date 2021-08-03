@@ -1,5 +1,5 @@
 import express from "express";
-import routes from "./routes.mjs";
+import routes from "./routes-v1.mjs";
 
 const server = express();
 
