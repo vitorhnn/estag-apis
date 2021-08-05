@@ -1,0 +1,47 @@
+openapi: 3.0.1
+info:
+  title: API de produtos programa de estágio, design de APIs.
+  summary: API de produtos como exemplo para o curso de design de APIs do programa de estágio
+  version: 1.0.0
+tags:
+  - name: Produtos
+    description: Recurso produtos
+paths:
+  /v1/products:
+    post:
+      tags:
+        - Produtos
+      summary: Criar novo produtos
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        201:
+          description: Produto criado com sucesso
+          content:
+            applicatio/json:
+              schema:
+                $ref: '#/components/schemas/InsertedProduct'
+components:
+  schemas:
+    Product:
+      properties:
+        name:
+          type: string
+        price:
+          type: string
+        weight:
+          type: number 
+    InsertedProduct:
+      allOf:
+        - $ref: '#/components/schemas/Product'
+      properties:
+        id:
+          type: integer
+
+
+
