@@ -4,8 +4,8 @@ import { v2tov1, v1tov2 } from "./convert.mjs";
 
 const router = Router();
 
-// weight=<,5
 router.get("/v1/products", async (req, res) => {
+    // weight=<,5
     const { weight } = req.query;
 
     let query = db.select(["id", "name", "price", "weight"]).from("products");
@@ -31,6 +31,8 @@ router.get("/v1/products/:id", async (req, res) => {
 
     const [product] = await db.select(["id", "name", "price", "weight"]).from("products").where({ id })
 
+    product.price = v2tov1(product.price);
+
     res.send(product);
 });
 
@@ -46,6 +48,8 @@ router.get("/v1/products/:id", async (req, res) => {
 router.post("/v1/products", async (req, res) => {
     const { name, price, weight } = req.body;
 
+    const convertedPrice = v1tov2(price);
+
     if (isNaN(parseFloat(price))) {
         return res.status(400).json({ msg: "price não era número" });
     }
@@ -54,7 +58,7 @@ router.post("/v1/products", async (req, res) => {
         return res.status(400).json({ msg: "weight não era número" });
     }
 
-    const id = await db.insert({ name, price, weight }).into("products").returning("id");
+    const id = await db.insert({ name, price: convertedPrice, weight }).into("products").returning("id");
 
     res.status(201).json({ id, name, price, weight });
 });
